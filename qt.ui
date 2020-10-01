@@ -14,7 +14,7 @@
    <cursorShape>ArrowCursor</cursorShape>
   </property>
   <property name="windowTitle">
-   <string>PyQT ile Seri haberleşme</string>
+   <string>Serial communication with PyQT</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -404,29 +404,29 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuAna_Ekran">
+   <widget class="QMenu" name="menuMain_Display">
     <property name="title">
      <string>Main monitor</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_leti_im">
+   <widget class="QMenu" name="menu_ contact">
     <property name="title">
      <string>About</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuYard_m">
+   <widget class="QMenu" name="menu_Help">
     <property name="title">
      <string>Help</string>
     </property>
    </widget>
-   <addaction name="menuAna_Ekran"/>
-   <addaction name="menu_leti_im"/>
-   <addaction name="menuYard_m"/>
+   <addaction name="menuMain_Display"/>
+   <addaction name="menu_ contact"/>
+   <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionAna_Ekran">
+  <action name="actionMain_Display">
    <property name="text">
-    <string>Ana Ekran</string>
+    <string>Main monitor</string>
    </property>
   </action>
  </widget>
