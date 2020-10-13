@@ -1,4 +1,6 @@
 # ---------Imports
+import threading
+
 import sys, serial, serial.tools.list_ports, warnings
 import glob
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -19,6 +21,9 @@ class Window(Frame):
         Frame.__init__(self, master)
         self.master = master
         self.init_window()
+        self.serial_object = None
+        self.serial_data = ''
+        self.filter_data = ''
 
     def get_serial_ports(self):
         """ Lists serial port names
@@ -48,20 +53,48 @@ class Window(Frame):
                 pass
         return result
 
-    # def connect(ser):  # button that starts a connection, ser
-    #     try:
-    #         global ser  # makes ser a global variable accessible to other functions
-    #         port = D.get()  # snags the number in the dropdown
-    #         print(D.get())
-    #         ser = serial.Serial(
-    #             port="COM" + str(port),
-    #             baudrate=9600,
-    #         )
-    #         print(ser.port)
-    #     except:
-    #         ctypes.windll.user32.MessageBoxW(0, "Fail", title, 0)
-    #         ser.close()
-    #     return ser
+    def serial_get_data(self):
+        while True:
+            try:
+                self.serial_data = self.serial_object.readline().decode('utf-8').strip('\n').strip('\r')
+                self.filter_data = self.serial_data.split(',')
+                # test = ''.join(self.filter_data)
+                print('\n')
+
+                if self.filter_data[0].find("B:") >= 0:
+                    value = self.filter_data[0].strip("B:")
+                    convertToInt = int(float(value))
+                    # self.change_chart_plot_Value(convertToInt)
+                    # print("Brake: " + str(convertToInt))
+
+                if self.filter_data[0].find("T:") >= 0:
+                    value = self.filter_data[0].strip("T:")
+                    convertToInt = int(float(value))
+                    self.change_chart_plot_Value(convertToInt)
+                    # print("Throttle: " + str(convertToInt))
+
+            except TypeError:
+                pass
+
+    def serial_connect(self, port="COM24", baud=9600):
+        try:
+            if sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+                try:
+                    self.serial_object = serial.Serial('/dev/tty' + str(port), baud)
+                except:
+                    print
+                    "Cant Open Specified Port"
+            elif sys.platform.startswith('win'):
+                self.serial_object = serial.Serial(port, baud)
+
+        except ValueError:
+            print
+            "Enter Baud and Port"
+            return
+
+        t1 = threading.Thread(target=self.serial_get_data)
+        t1.daemon = True
+        t1.start()
 
     def update_chart(self, _):
         test = mm.multiMap(self.scatter_x[0], [0, 20, 40, 60, 80, 100], self.procent, 100);
@@ -185,6 +218,10 @@ class Window(Frame):
         self.status = StringVar()
         self.timeOutList = OptionMenu(self, self.status, *[0, 2, 4, 6, 8, 10, 15, 20])
         self.timeOutList.grid(row=10, column=5)
+
+        # self.connectButton = Button(self, text="run something", command=lambda: self.serial_connect("com24", 9600))
+        self.connectButton = Button(self, text="run something", command=self.serial_connect)
+        self.connectButton.grid(row=11, column=0)
 
         ########################################
         self.ani = animation.FuncAnimation(self.fig, self.update_chart, interval=100, blit=False)
