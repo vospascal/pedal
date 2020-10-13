@@ -1,0 +1,157 @@
+# # import sys, serial, serial.tools.list_ports, warnings
+# import tkinter
+# import os
+# from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+#
+# import matplotlib.pyplot as plt
+# import matplotlib.animation
+# import numpy as np
+#
+#
+# # from scipy.interpolate import splrep, splev, make_interp_spline
+#
+# # ports = [
+# #     p.device
+# #     for p in serial.tools.list_ports.comports()
+# #     #    if 'USB' in p.description
+# # ]
+# #
+# # if not ports:
+# #     raise IOError("No Serial Connection device!")
+# #
+# #
+# # if len(ports) > 1:
+# #     warnings.warn('Connected ....')
+# #
+# # ser = serial.Serial(ports[0], 9600)
+# #
+# #
+# #
+# # while True:
+# #     for c in ser.read():
+# #         line = ser.readline().decode('utf-8')
+# #         print(line)
+#
+#
+# # open stuff when opening window
+# if os.path.isfile('save.txt'):
+#     with open('save.txt', 'r') as f:
+#         print(f.read())
+#
+# mainWindow = tkinter.Tk()
+# mainWindow.title("Pedalbox")
+# # mainWindow.iconbitmap("./pedal.ico")
+#
+# canvas = tkinter.Canvas(mainWindow, heigh=350, width=600, bg="#ffffff")
+# canvas.pack()
+#
+# inputsomeThing = tkinter.Entry(mainWindow, width="50")
+# inputsomeThing.pack()
+#
+#
+# def runSomething(testcase):
+#     print(testcase)
+#     print(inputsomeThing.get())
+#
+#
+# # buttonsomeThing = tkinter.Button(mainWindow, text="run something", command=lambda: graph())
+# # buttonsomeThing.pack()
+#
+# # def graph():
+# #     x = np.linspace(100, 25, 10)
+# #     plt.plot(x, np.sin(x), label='sin')
+# #     plt.plot(x, np.cos(x), label='cos')
+# #     plt.legend(loc='lower center', frameon=False, ncol=2)
+# #     plt.show()
+#
+# # fig = plt.figure()
+# # fig.add_subplot(1, 1, 1)
+# # x = [10]
+# # y = [31]
+# # plt.xlim(0, 100)
+# # plt.ylim(0, 100)
+# # plt.scatter([0], [0])
+#
+#
+#
+#
+# fig, ax = plt.subplots()
+#
+# data = np.cumsum(np.random.normal(size=100)) #some list of data
+#
+# ax.grid()
+# sc = ax.scatter(data[::2], data[1::2], c=data[1::2])
+#
+# def plot(a, data):
+#     data += np.cumsum(np.random.normal(size=100)+3e-2)
+#     X = np.c_[data[::2], data[1::2]]
+#     sc.set_offsets(X)
+#     # manually relim:
+#     xmin=X[:,0].min(); xmax=X[:,0].max()
+#     ymin=X[:,1].min(); ymax=X[:,1].max()
+#     ax.set_xlim(xmin-0.1*(xmax-xmin),xmax+0.1*(xmax-xmin))
+#     ax.set_ylim(ymin-0.1*(ymax-ymin),ymax+0.1*(ymax-ymin))
+#
+# ani = matplotlib.animation.FuncAnimation(fig, plot, fargs=(data,),frames=4, interval=100, repeat=True)
+# plt.show()
+#
+#
+#
+# var = tkinter.DoubleVar()
+# var.set(50)
+# horizontal = tkinter.Scale(mainWindow, from_=0, to=100, orient=tkinter.HORIZONTAL, variable=var)
+#
+# horizontal.pack()
+#
+#
+#
+#
+#
+# # bspl = splrep([0, 20, 40, 60, 80, 100], [0, 15, 43, 53, 75, 100], s=3)
+# # bspl_y = splev([0, 20, 40, 60, 80, 100], bspl)
+#
+# # a_bSpline = make_interp_spline([0, 20, 40, 60, 80, 100],[0, 15, 43, 53, 75, 100])
+# # print(a_bSpline())
+#
+# plt.plot([0, 20, 40, 60, 80, 100], [0, 20, 40, 60, 80, 100])
+# plt.plot([0, 20, 40, 60, 80, 100], [0, 15, 43, 53, 75, 100])
+# plt.xlabel("x")
+# plt.ylabel("y")
+# # plt.plot([0, 20, 40, 60, 80, 100], bspl_y)
+#
+# canvas = FigureCanvasTkAgg(fig, master=mainWindow)  # A tk.DrawingArea.
+# canvas.draw()
+#
+# # pack_toolbar=False will make it easier to use a layout manager later on.
+# toolbar = NavigationToolbar2Tk(canvas, mainWindow, pack_toolbar=False)
+# toolbar.update()
+#
+# canvas.get_tk_widget().pack()
+#
+# mainWindow.mainloop()
+#
+# # save stuff when closing window
+# with open('save.txt', 'w') as f:
+#     f.write("test")
+#
+#
+# def multiMap(val, _in, _out, size):
+#     if val <= _in[0]:
+#         return _out[0]
+#
+#     if val >= _in[size - 1]:
+#         return _out[size - 1]
+#
+#     # search right interval
+#     pos = 1;  # _in[0] allready tested
+#     while val > _in[pos]:
+#         pos += 1
+#
+#     # this will handle all exact "points" in the _in array
+#     if val == _in[pos]:
+#         return _out[pos]
+#
+#     # interpolate in the right segment for the rest
+#     return (val - _in[pos - 1]) * (_out[pos] - _out[pos - 1]) / (_in[pos] - _in[pos - 1]) + _out[pos - 1]
+
+

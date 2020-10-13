@@ -1,0 +1,15 @@
+pyinstaller.exe -i pedal.ico -n PedalBox -w -F --hidden-import ctypes main.py
+pyinstaller.exe -i pedal.ico -n PedalBox -w -F main.py
+
+
+
+How to Exclude Files and Folders From Norton Antivirus Software Scans
+Open the Norton antivirus software and select Settings.
+Select Antivirus.
+Select the Scans and Risks tab.
+Scroll down to the Exclusions/Low Risks section and select Configure [+] next to Items to Exclude From Scans.
+
+
+
+
+auto-py-to-exe
