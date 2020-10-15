@@ -9,7 +9,7 @@ from PedalFigure import PedalFigure
 from SerialOptionMenu import SerialOptionMenu
 
 from tkinter import Frame, Label, Entry, Button, OptionMenu, StringVar, DoubleVar, Scale, HORIZONTAL
-
+from tkinter.ttk import Notebook
 
 class Window(Frame):
     def __init__(self, master=None):
@@ -17,7 +17,6 @@ class Window(Frame):
         self.master = master
         self.init_window()
         self.serial_object = None
-        self.serial_data = ''
         self.filter_data = ''
 
     def get_serial_ports(self):
@@ -93,10 +92,46 @@ class Window(Frame):
 
     def init_window(self):
         # self.master.title("Use Of FuncAnimation in tkinter based GUI")
-        self.pack(fill='both', expand=1)
 
-        self.throttle = PedalFigure(root, "throttle", [0, 20, 40, 60, 80, 100], [0, 20, 40, 60, 80, 100])
-        self.throttle.pack()
+        frameTabs = Frame(root)
+        frameTabs.pack(fill="both")
+
+        tablayout = Notebook(frameTabs)
+
+        # tab1
+        tab1 = Frame(tablayout)
+        tab1.pack(fill="both")
+
+        # self.throttle = PedalFigure(tab1, "throttle", [0, 20, 40, 60, 80, 100], [0, 20, 40, 60, 80, 100])
+        # horzontal = self.throttle.pack(fill="both")
+        # horzontal.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        horzontal = Label(tab1, text="Item 2 in Horizontal")
+        horzontal.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        horzontal = Label(tab1, text="Item 3 in Horizontal")
+        horzontal.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+        tab1.grid_columnconfigure(0, weight=1)
+        tab1.grid_columnconfigure(1, weight=1)
+        tab1.grid_columnconfigure(2, weight=1)
+        tablayout.add(tab1, text="TAB 1")
+
+        # tab2
+        tab2 = Frame(tablayout)
+        tab2.pack(fill="both")
+        tab2labela = Label(tab2, text="tab2a")
+        tab2labela.grid(row=0, column=0)
+        tab2labelb = Label(tab2, text="tab2b")
+        tab2labelb.grid(row=0, column=1)
+        tablayout.add(tab2, text="TAB 2")
+
+        tablayout.pack(fill="both")
+
+
+
+
+
+        # self.throttle = PedalFigure(root, "throttle", [0, 20, 40, 60, 80, 100], [0, 20, 40, 60, 80, 100])
+        # self.throttle.pack()
 
         # self.brake = PedalFigure(root, "brake", [0, 20, 40, 60, 80, 100], [0, 20, 40, 60, 80, 100],)
         # self.brake.pack()
