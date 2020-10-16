@@ -53,19 +53,30 @@ class MainWindow(Tk):
             try:
                 self.serial_data = self.serial_object.readline().decode('utf-8').strip('\n').strip('\r')
                 self.filter_data = self.serial_data.split(',')
-                print('\n')
+
+                if self.filter_data[0].find("BMAP:") >= 0:
+                    value = self.filter_data[0].strip("BMAP:").split('-')
+                    print("Brake map:", value)
+
+                if self.filter_data[0].find("TMAP:") >= 0:
+                    value = self.filter_data[0].strip("TMAP:").split('-')
+                    print("Throttle map:", value)
 
                 if self.filter_data[0].find("B:") >= 0:
-                    value = self.filter_data[0].strip("B:")
-                    convertToInt = int(float(value))
-                    self.brake.change_chart_plot_value(convertToInt)
-                    # print("Brake: " + str(convertToInt))
+                    value = self.filter_data[0].strip("B:").split(';')
+                    after = int(float(value[0]))
+                    before = int(float(value[1]))
+                    self.brake.change_chart_plot_value(before, after)
+                    # print("Brake: before:", before)
+                    # print("Brake: after:", after)
 
                 if self.filter_data[0].find("T:") >= 0:
-                    value = self.filter_data[0].strip("T:")
-                    convertToInt = int(float(value))
-                    self.throttle.change_chart_plot_value(convertToInt)
-                    # print("Throttle: " + str(convertToInt))
+                    value = self.filter_data[0].strip("T:").split(';')
+                    after = int(float(value[0]))
+                    before = int(float(value[1]))
+                    self.throttle.change_chart_plot_value(before, after)
+                    # print("Throttle: before:", before)
+                    # print("Throttle: after:", after)
 
             except TypeError:
                 pass
@@ -89,6 +100,8 @@ class MainWindow(Tk):
         t1 = threading.Thread(target=self.serial_get_data)
         t1.daemon = True
         t1.start()
+
+        self.serial_object.write(bytes(b'd'))
 
     def init_window(self):
         # Main Container

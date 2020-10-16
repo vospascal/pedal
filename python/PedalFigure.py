@@ -18,5 +18,5 @@ class PedalFigure(Frame):
     def set_chart_point(self, point, position):
         self.figure.set_chart_point(point, position)
 
-    def change_chart_plot_value(self, value):
-        self.figure.change_chart_plot_value(value)
+    def change_chart_plot_value(self, before, after):
+        self.figure.change_chart_plot_value(before, after)

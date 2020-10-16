@@ -69,7 +69,7 @@ void loop() {
   } else {
     int restThrottleValue = throttleRawValue - 74;
     Joystick.setThrottle(restThrottleValue);
-    
+
     ThrottleBefore = restThrottleValue / 4;
     ThrottleAfter = multiMap<int>(ThrottleBefore, inputMapThrottle, outputMapThrottle, 50);
 
@@ -82,7 +82,7 @@ void loop() {
   } else {
     int restBrakeValue = brakeRawValue - 74;
     Joystick.setBrake(restBrakeValue);
-    
+
     BrakeBefore = restBrakeValue / 4;
     BrakeAfter = multiMap<int>(BrakeBefore, inputMapBrake, outputMapBrake, 50);
 

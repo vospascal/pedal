@@ -2,10 +2,8 @@ from tkinter import Frame
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from python import multiMap as mm
+# from python import multiMap as mm
 import numpy as np
-
-from tkinter import RIGHT
 
 
 class FigureBlock(Frame):
@@ -27,19 +25,19 @@ class FigureBlock(Frame):
         self.lines, = ax.plot(xscale, self.procent, markersize=5, marker='o')
 
         canvas = FigureCanvasTkAgg(fig, master=self)
-        canvas.get_tk_widget().pack(side=RIGHT)
+        canvas.get_tk_widget().pack()
 
         self.ani_brake = animation.FuncAnimation(fig, self.update_chart, interval=100, blit=False)
 
     def update_chart(self, _):
-        test = mm.multiMap(self.scatter_x[0], [0, 20, 40, 60, 80, 100], self.procent, 100)
-        self.sc.set_offsets(np.column_stack((self.scatter_x, test)))
+        # test = mm.multiMap(self.scatter_x[0], [0, 20, 40, 60, 80, 100], self.procent, 100)
+        self.sc.set_offsets(np.column_stack((self.scatter_x, self.scatter_y)))
         return self.sc
 
     def set_chart_point(self, point, position):
         self.procent[position] = int(point.get())
         self.lines.set_ydata(self.procent)
 
-    def change_chart_plot_value(self, x):
-        self.scatter_x = [int(x)]
-        self.scatter_y = [int(x)]
+    def change_chart_plot_value(self, before, after):
+        self.scatter_x = [int(after)]
+        self.scatter_y = [int(before)]
