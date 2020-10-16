@@ -1,11 +1,10 @@
-import tkinter as tk
-from tkinter import Frame, Label, Entry, Button, OptionMenu, StringVar, DoubleVar, Scale, HORIZONTAL
+from tkinter import Frame, Label, Entry
 
 
-class ProcentageInput(tk.Frame):
+class ProcentageInput(Frame):
     def __init__(self, master, text, index, varValue, set_chart_point, row=0, column=0):
         super().__init__(master)
-        self.label = Label(self, text=text, width=12)
+        self.label = Label(self, text=text, width=12, bg='white')
         self.label.grid(row=row, column=column)
         self.input = Entry(self, width=12)
         self.input.insert(0, varValue)

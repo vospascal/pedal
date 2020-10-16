@@ -1,13 +1,14 @@
-import tkinter as tk
+from tkinter import Frame
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import multiMap as mm
 import numpy as np
 
-from tkinter import LEFT, RIGHT
+from tkinter import RIGHT
 
-class FigureBlock(tk.Frame):
+
+class FigureBlock(Frame):
     def __init__(self, root, title, xscale, yscale, procent):
         super().__init__(root)
 
@@ -15,23 +16,23 @@ class FigureBlock(tk.Frame):
         self.scatter_y = [0]
         self.procent = procent
 
-        self.fig = plt.Figure(figsize=(3, 3), dpi=80, facecolor='w', edgecolor='k')
-        self.fig.text(0.5, 0.95, title, ha='center')
-        self.ax = self.fig.add_subplot(1, 1, 1)
-        self.sc = self.ax.scatter(self.scatter_x, self.scatter_y)
-        self.ax.set_xlim(0, 100)
-        self.ax.set_ylim(0, 100)
+        fig = plt.Figure(figsize=(3, 3), dpi=80, facecolor='w', edgecolor='k')
+        fig.text(0.5, 0.95, title, ha='center')
+        ax = fig.add_subplot(1, 1, 1)
+        self.sc = ax.scatter(self.scatter_x, self.scatter_y)
+        ax.set_xlim(0, 100)
+        ax.set_ylim(0, 100)
 
-        self.line, = self.ax.plot(xscale, yscale)
-        self.lines, = self.ax.plot(xscale, self.procent, markersize=5, marker='o')
+        self.line, = ax.plot(xscale, yscale)
+        self.lines, = ax.plot(xscale, self.procent, markersize=5, marker='o')
 
-        self.canvas = FigureCanvasTkAgg(self.fig, master=self)
-        self.canvas.get_tk_widget().pack(side=RIGHT)
+        canvas = FigureCanvasTkAgg(fig, master=self)
+        canvas.get_tk_widget().pack(side=RIGHT)
 
-        self.ani_brake = animation.FuncAnimation(self.fig, self.update_chart, interval=100, blit=False)
+        self.ani_brake = animation.FuncAnimation(fig, self.update_chart, interval=100, blit=False)
 
     def update_chart(self, _):
-        test = mm.multiMap(self.scatter_x[0], [0, 20, 40, 60, 80, 100], self.procent, 100);
+        test = mm.multiMap(self.scatter_x[0], [0, 20, 40, 60, 80, 100], self.procent, 100)
         self.sc.set_offsets(np.column_stack((self.scatter_x, test)))
         return self.sc
 

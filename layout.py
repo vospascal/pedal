@@ -1,39 +1,11 @@
-from tkinter import *
-
-from tkinter import Frame, Label, LEFT
+import serial, serial.tools.list_ports, threading, glob, sys
+from tkinter import Frame, Tk, Button
 from tkinter.ttk import Notebook
 
-from PedalFigure import PedalFigure
-
-
-class Clutch(Frame):
-    def __init__(self, parent, controller):
-        Frame.__init__(self, parent, bg='white')
-        # self.pack(fill=BOTH, side=TOP)
-        lblTitle = Label(self, text='Welcome to the Program!')
-        lblTitle.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-        self.clutch = PedalFigure(self, "clutch", [0, 20, 40, 60, 80, 100], [0, 20, 40, 60, 80, 100])
-        self.clutch.grid(row=1, column=0)
-
-
-class Brake(Frame):
-    def __init__(self, parent, controller):
-        Frame.__init__(self, parent, bg='white')
-        # self.pack(fill=BOTH, side=TOP)
-        lblTitle = Label(self, text='Welcome to the Program!')
-        lblTitle.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-        self.brake = PedalFigure(self, "brake", [0, 20, 40, 60, 80, 100], [0, 20, 40, 60, 80, 100])
-        self.brake.grid(row=1, column=0)
-
-
-class Trottle(Frame):
-    def __init__(self, parent, controller):
-        Frame.__init__(self, parent, bg='white')
-        # self.pack(fill=BOTH, side=TOP)
-        lblTitle = Label(self, text='Welcome to the Program!')
-        lblTitle.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-        self.brake = PedalFigure(self, "brake", [0, 20, 40, 60, 80, 100], [0, 20, 40, 60, 80, 100])
-        self.brake.grid(row=1, column=0)
+from SerialConnect import SerialConnect
+from Clutch import Clutch
+from Brake import Brake
+from Throttle import Throttle
 
 
 class MainWindow(Tk):
@@ -47,6 +19,76 @@ class MainWindow(Tk):
         self.serial_object = None
         self.serial_data = ''
         self.filter_data = ''
+
+    def get_serial_ports(self):
+        """ Lists serial port names
+
+            :raises EnvironmentError:
+                On unsupported or unknown platforms
+            :returns:
+                A list of the serial ports available on the system
+        """
+        if sys.platform.startswith('win'):
+            ports = ['COM%s' % (i + 1) for i in range(256)]
+        elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+            # this excludes your current terminal "/dev/tty"
+            ports = glob.glob('/dev/tty[A-Za-z]*')
+        elif sys.platform.startswith('darwin'):
+            ports = glob.glob('/dev/tty.*')
+        else:
+            raise EnvironmentError('Unsupported platform')
+
+        result = []
+        for port in ports:
+            try:
+                s = serial.Serial(port)
+                s.close()
+                result.append(port)
+            except (OSError, serial.SerialException):
+                pass
+        return result
+
+    def serial_get_data(self):
+        while True:
+            try:
+                self.serial_data = self.serial_object.readline().decode('utf-8').strip('\n').strip('\r')
+                self.filter_data = self.serial_data.split(',')
+                print('\n')
+
+                if self.filter_data[0].find("B:") >= 0:
+                    value = self.filter_data[0].strip("B:")
+                    convertToInt = int(float(value))
+                    self.brake.change_chart_plot_value(convertToInt)
+                    # print("Brake: " + str(convertToInt))
+
+                if self.filter_data[0].find("T:") >= 0:
+                    value = self.filter_data[0].strip("T:")
+                    convertToInt = int(float(value))
+                    self.throttle.change_chart_plot_value(convertToInt)
+                    # print("Throttle: " + str(convertToInt))
+
+            except TypeError:
+                pass
+
+    def serial_connect(self, port="COM24", baud=9600):
+        try:
+            if sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+                try:
+                    self.serial_object = serial.Serial('/dev/tty' + str(port), baud)
+                except:
+                    print
+                    "Cant Open Specified Port"
+            elif sys.platform.startswith('win'):
+                self.serial_object = serial.Serial(port, baud)
+
+        except ValueError:
+            print
+            "Enter Baud and Port"
+            return
+
+        t1 = threading.Thread(target=self.serial_get_data)
+        t1.daemon = True
+        t1.start()
 
     def init_window(self):
         # Main Container
@@ -68,8 +110,8 @@ class MainWindow(Tk):
         tab1.grid_columnconfigure(1, weight=1)
         tablayout.add(tab1, text="TAB 1")
 
-        self.trottle = Trottle(tab1, self)
-        self.trottle.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+        self.throttle = Throttle(tab1, self)
+        self.throttle.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
         tab1.grid_columnconfigure(2, weight=1)
 
         # # tab2
@@ -80,6 +122,13 @@ class MainWindow(Tk):
         # tablayout.add(tab2, text="TAB 2")
 
         tablayout.pack(fill="both", expand=1)
+
+        serialConnect = SerialConnect(container, self, self.get_serial_ports)
+        serialConnect.pack()
+
+        # self.connectButton = Button(self, text="run something", command=lambda: self.serial_connect("com24", 9600))
+        connectButton = Button(self, text="run something", command=self.serial_connect)
+        connectButton.pack()
 
 
 if __name__ == '__main__':
