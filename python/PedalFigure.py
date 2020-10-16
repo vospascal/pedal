@@ -1,6 +1,6 @@
 from tkinter import Frame
-from ProcentageBlock import ProcentageBlock
-from FigureBlock import FigureBlock
+from python.ProcentageBlock import ProcentageBlock
+from python.FigureBlock import FigureBlock
 
 
 class PedalFigure(Frame):

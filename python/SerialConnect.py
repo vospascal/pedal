@@ -1,5 +1,5 @@
 from tkinter import Frame
-from SerialOptionMenu import SerialOptionMenu
+from python.SerialOptionMenu import SerialOptionMenu
 
 class SerialConnect(Frame):
     def __init__(self, parent, controller, get_serial_ports):

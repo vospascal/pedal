@@ -1,23 +1,21 @@
-import serial, serial.tools.list_ports, threading, glob, sys
-from tkinter import Frame, Tk, Button
+# ---------Imports
+import threading
+import sys, serial, serial.tools.list_ports
+import glob
+import tkinter as tk
+# ---------End of imports
+
+from python.SerialOptionMenu import SerialOptionMenu
+
+from tkinter import Frame, Label, Button
 from tkinter.ttk import Notebook
 
-from SerialConnect import SerialConnect
-from Clutch import Clutch
-from Brake import Brake
-from Throttle import Throttle
-
-
-class MainWindow(Tk):
+class Window(Frame):
     def __init__(self, master=None):
-        Tk.__init__(self, master)
-        self.geometry("750x600")
-        self.title("Pedalbox")
-        self.iconbitmap("./pedal.ico")
+        Frame.__init__(self, master)
         self.master = master
         self.init_window()
         self.serial_object = None
-        self.serial_data = ''
         self.filter_data = ''
 
     def get_serial_ports(self):
@@ -58,7 +56,7 @@ class MainWindow(Tk):
                 if self.filter_data[0].find("B:") >= 0:
                     value = self.filter_data[0].strip("B:")
                     convertToInt = int(float(value))
-                    self.brake.change_chart_plot_value(convertToInt)
+                    # self.brake.change_chart_plot_value(convertToInt)
                     # print("Brake: " + str(convertToInt))
 
                 if self.filter_data[0].find("T:") >= 0:
@@ -90,47 +88,74 @@ class MainWindow(Tk):
         t1.daemon = True
         t1.start()
 
-    def init_window(self):
-        # Main Container
-        container = Frame(self, bg='white')
-        container.pack(fill="both")
 
-        tablayout = Notebook(container)
+    def init_window(self):
+        # self.master.title("Use Of FuncAnimation in tkinter based GUI")
+
+        frameTabs = Frame(root)
+        frameTabs.pack(fill="both")
+
+        tablayout = Notebook(frameTabs)
 
         # tab1
-        tab1 = Frame(tablayout, bg='white')
-        tab1.pack(fill="both", expand=1)
+        tab1 = Frame(tablayout)
+        tab1.pack(fill="both")
 
-        self.clutch = Clutch(tab1, self)
-        self.clutch.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        # self.throttle = PedalFigure(tab1, "throttle", [0, 20, 40, 60, 80, 100], [0, 20, 40, 60, 80, 100])
+        # horzontal = self.throttle.pack(fill="both")
+        # horzontal.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        horzontal = Label(tab1, text="Item 2 in Horizontal")
+        horzontal.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        horzontal = Label(tab1, text="Item 3 in Horizontal")
+        horzontal.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
         tab1.grid_columnconfigure(0, weight=1)
-
-        self.brake = Brake(tab1, self)
-        self.brake.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
         tab1.grid_columnconfigure(1, weight=1)
+        tab1.grid_columnconfigure(2, weight=1)
         tablayout.add(tab1, text="TAB 1")
 
-        self.throttle = Throttle(tab1, self)
-        self.throttle.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
-        tab1.grid_columnconfigure(2, weight=1)
+        # tab2
+        tab2 = Frame(tablayout)
+        tab2.pack(fill="both")
+        tab2labela = Label(tab2, text="tab2a")
+        tab2labela.grid(row=0, column=0)
+        tab2labelb = Label(tab2, text="tab2b")
+        tab2labelb.grid(row=0, column=1)
+        tablayout.add(tab2, text="TAB 2")
 
-        # # tab2
-        # tab2 = Frame(tablayout)
-        # tab2.pack(fill="both")
-        # tab2labela = Label(tab2, text="tab2a")
-        # tab2labela.grid(row=0, column=0)
-        # tablayout.add(tab2, text="TAB 2")
+        tablayout.pack(fill="both")
 
-        tablayout.pack(fill="both", expand=1)
 
-        serialConnect = SerialConnect(container, self, self.get_serial_ports)
-        serialConnect.pack()
+
+
+
+        # self.throttle = PedalFigure(root, "throttle", [0, 20, 40, 60, 80, 100], [0, 20, 40, 60, 80, 100])
+        # self.throttle.pack()
+
+        # self.brake = PedalFigure(root, "brake", [0, 20, 40, 60, 80, 100], [0, 20, 40, 60, 80, 100],)
+        # self.brake.pack()
+
+        self.com_port = SerialOptionMenu(root, "com port selection", self.get_serial_ports(), 0, 1)
+        self.com_port.pack()
+
+        self.bout_speed = SerialOptionMenu(root, "baud speed selection",
+                                           [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200], 0, 1)
+        self.bout_speed.pack()
+
+        self.bit_size = SerialOptionMenu(root, "bit size selection", [2, 4, 8, 16, 32, 64], 0, 1)
+        self.bit_size.pack()
+
+        self.time_out = SerialOptionMenu(root, "time out selection", [0, 2, 4, 6, 8, 10, 15, 20], 0, 1)
+        self.time_out.pack()
 
         # self.connectButton = Button(self, text="run something", command=lambda: self.serial_connect("com24", 9600))
-        connectButton = Button(self, text="run something", command=self.serial_connect)
-        connectButton.pack()
+        self.connectButton = Button(self, text="run something", command=self.serial_connect)
+        self.connectButton.pack()
 
 
-if __name__ == '__main__':
-    mainWindow = MainWindow()
-    mainWindow.mainloop()
+root = tk.Tk()
+root.geometry("650x750")
+root.title("Pedalbox")
+root.iconbitmap("./pedal.ico")
+app = Window(root)
+tk.mainloop()

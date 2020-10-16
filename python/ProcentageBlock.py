@@ -1,5 +1,5 @@
 from tkinter import Frame
-from ProcentageInput import ProcentageInput
+from python.ProcentageInput import ProcentageInput
 
 
 class ProcentageBlock(Frame):

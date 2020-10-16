@@ -2,7 +2,7 @@ from tkinter import Frame
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import multiMap as mm
+from python import multiMap as mm
 import numpy as np
 
 from tkinter import RIGHT
