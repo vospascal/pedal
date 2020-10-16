@@ -65,27 +65,25 @@ void loop() {
   if (throttleRawValue <= 74) {
     ThrottleBefore = 0;
     ThrottleAfter = 0;
-    Joystick.setThrottle(abs(0));
+    Joystick.setThrottle(0);
   } else {
     int restThrottleValue = throttleRawValue - 74;
-    Joystick.setThrottle(restThrottleValue);
-
+//    Joystick.setThrottle(restThrottleValue);
     ThrottleBefore = restThrottleValue / 4;
     ThrottleAfter = multiMap<int>(ThrottleBefore, inputMapThrottle, outputMapThrottle, 50);
-
+    Joystick.setThrottle(ThrottleAfter);
   }
 
   if (brakeRawValue <= 74) {
     BrakeBefore = 0;
     BrakeAfter = 0;
-    Joystick.setBrake(abs(0));
+    Joystick.setBrake(0);
   } else {
     int restBrakeValue = brakeRawValue - 74;
-    Joystick.setBrake(restBrakeValue);
-
+//    Joystick.setBrake(restBrakeValue);
     BrakeBefore = restBrakeValue / 4;
     BrakeAfter = multiMap<int>(BrakeBefore, inputMapBrake, outputMapBrake, 50);
-
+    Joystick.setBrake(BrakeAfter);
   }
   String p1 = ";";
   Serial.print("T:");
