@@ -6,6 +6,8 @@ class ProcentageBlock(Frame):
     def __init__(self, root, set_chart_point, procent):
         super().__init__(root)
         Frame.__init__(self, root, bg='white')
+        self.procent = procent
+
         # todo add + and - button
         # todo validate value not bigger then next and smaller then last
 

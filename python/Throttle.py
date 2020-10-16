@@ -16,3 +16,6 @@ class Throttle(Frame):
 
     def change_chart_plot_value(self, after, before):
         self.throttle.change_chart_plot_value(after, before)
+
+    def getMap(self, throttle_map):
+        self.throttle.getMap(throttle_map)

@@ -41,3 +41,6 @@ class FigureBlock(Frame):
     def change_chart_plot_value(self, before, after):
         self.scatter_x = [int(after)]
         self.scatter_y = [int(before)]
+
+    def abc(self, xyz):
+        self.lines.set_ydata(xyz)

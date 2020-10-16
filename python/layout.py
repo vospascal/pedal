@@ -55,12 +55,14 @@ class MainWindow(Tk):
                 self.filter_data = self.serial_data.split(',')
 
                 if self.filter_data[0].find("BMAP:") >= 0:
-                    value = self.filter_data[0].strip("BMAP:").split('-')
-                    print("Brake map:", value)
+                    brake_map = self.filter_data[0].strip("BMAP:").split('-')
+                    print("Brake map:", brake_map)
+                    self.throttle.getMap(brake_map)
 
                 if self.filter_data[0].find("TMAP:") >= 0:
-                    value = self.filter_data[0].strip("TMAP:").split('-')
-                    print("Throttle map:", value)
+                    throttle_map = self.filter_data[0].strip("TMAP:").split('-')
+                    print("Throttle map:", throttle_map)
+                    self.brake.getMap(throttle_map)
 
                 if self.filter_data[0].find("B:") >= 0:
                     value = self.filter_data[0].strip("B:").split(';')
