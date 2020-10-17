@@ -22,7 +22,7 @@ void setup() {
   Joystick.begin();
   Joystick.setThrottle(throttleValue);
   Joystick.setBrake(brakeValue);
-  delay(200);
+  delay(2000);
 }
 
 
@@ -46,29 +46,38 @@ void loop() {
     char c = Serial.read();
     if (c == 'd')
     {
-      String TMAP = "TMAP:" +String(outputMapThrottle[0]) + "-" + String(outputMapThrottle[1]) + "-" + String(outputMapThrottle[2]) + "-" + String(outputMapThrottle[3]) + "-" + String(outputMapThrottle[4]) + "-" + String(outputMapThrottle[5]);
+      String TMAP = "TMAP:" + String(outputMapThrottle[0]) + "-" + String(outputMapThrottle[1]) + "-" + String(outputMapThrottle[2]) + "-" + String(outputMapThrottle[3]) + "-" + String(outputMapThrottle[4]) + "-" + String(outputMapThrottle[5]);
       Serial.print(TMAP);
       Serial.println(',');
 
-      String BMAP = "BMAP:" +String(outputMapBrake[0]) + "-" + String(outputMapBrake[1]) + "-" + String(outputMapBrake[2]) + "-" + String(outputMapBrake[3]) + "-" + String(outputMapBrake[4]) + "-" + String(outputMapBrake[5]);
+      String BMAP = "BMAP:" + String(outputMapBrake[0]) + "-" + String(outputMapBrake[1]) + "-" + String(outputMapBrake[2]) + "-" + String(outputMapBrake[3]) + "-" + String(outputMapBrake[4]) + "-" + String(outputMapBrake[5]);
       Serial.print(BMAP);
       Serial.println(',');
     }
+
+    delay(50);
+    
+    if (c == 'e'){
+      Serial.print("setMap called");
+      Serial.println(',');
+    }
+
   }
+
 
   // read the input on analog pin 0:
   int throttleRawValue = analogRead(A0);
   int brakeRawValue = analogRead(A1);
 
   // print out the value you read:
-//
+  //
   if (throttleRawValue <= 74) {
     ThrottleBefore = 0;
     ThrottleAfter = 0;
     Joystick.setThrottle(0);
   } else {
     int restThrottleValue = throttleRawValue - 74;
-//    Joystick.setThrottle(restThrottleValue);
+    //    Joystick.setThrottle(restThrottleValue);
     ThrottleBefore = restThrottleValue / 4;
     ThrottleAfter = multiMap<int>(ThrottleBefore, inputMapThrottle, outputMapThrottle, 50);
     Joystick.setThrottle(ThrottleAfter);
@@ -80,7 +89,7 @@ void loop() {
     Joystick.setBrake(0);
   } else {
     int restBrakeValue = brakeRawValue - 74;
-//    Joystick.setBrake(restBrakeValue);
+    //    Joystick.setBrake(restBrakeValue);
     BrakeBefore = restBrakeValue / 4;
     BrakeAfter = multiMap<int>(BrakeBefore, inputMapBrake, outputMapBrake, 50);
     Joystick.setBrake(BrakeAfter);
@@ -92,7 +101,7 @@ void loop() {
 
   Serial.print("B:");
   Serial.println(BrakeBefore + p1 + BrakeAfter);
-  
+
   Joystick.sendState(); // Update the Joystick status on the PC
   Serial.flush();
   delay(100);

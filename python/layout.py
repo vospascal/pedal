@@ -1,4 +1,4 @@
-import serial, serial.tools.list_ports, threading, glob, sys
+import serial, serial.tools.list_ports, threading, glob, sys, time
 from tkinter import Frame, Tk, Button, Label
 from tkinter.ttk import Notebook
 
@@ -94,6 +94,8 @@ class MainWindow(Tk):
                     # print("Throttle: before:", before)
                     # print("Throttle: after:", after)
 
+                if self.filter_data[0].find("setMap") >= 0:
+                    print(self.filter_data[0])
 
             except TypeError:
                 pass
@@ -118,7 +120,14 @@ class MainWindow(Tk):
         t1.daemon = True
         t1.start()
 
-        self.serial_object.write(bytes(b'd'))
+        self.serial_object.write(b'd')
+        time.sleep(.50)
+        self.serial_object.write(b'e')
+
+    def serial_send_data(self, send_data):
+        if not send_data:
+            print("Sent Nothing")
+        self.serial_object.write(send_data)
 
     def init_window(self):
         # Main Container
@@ -154,7 +163,6 @@ class MainWindow(Tk):
         self.brake = Brake(tab2, self)
         self.brake.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
         tab2.grid_columnconfigure(1, weight=1)
-
 
         self.throttle = Throttle(tab2, self)
         self.throttle.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
