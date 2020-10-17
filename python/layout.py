@@ -1,11 +1,14 @@
 import serial, serial.tools.list_ports, threading, glob, sys
-from tkinter import Frame, Tk, Button
+from tkinter import Frame, Tk, Button, Label
 from tkinter.ttk import Notebook
 
 from python.SerialConnect import SerialConnect
 from python.Clutch import Clutch
 from python.Brake import Brake
 from python.Throttle import Throttle
+from python.ThrottleCluster import ThrottleCluster
+from python.ClutchCluster import ClutchCluster
+from python.BrakeCluster import BrakeCluster
 
 
 class MainWindow(Tk):
@@ -69,6 +72,7 @@ class MainWindow(Tk):
                     after = int(float(value[0]))
                     before = int(float(value[1]))
                     self.brake.change_chart_plot_value(before, after)
+                    self.brakeCluster.update(after)
                     # print("Brake: before:", before)
                     # print("Brake: after:", after)
 
@@ -77,8 +81,19 @@ class MainWindow(Tk):
                     after = int(float(value[0]))
                     before = int(float(value[1]))
                     self.throttle.change_chart_plot_value(before, after)
+                    self.throttleCluster.update(after)
                     # print("Throttle: before:", before)
                     # print("Throttle: after:", after)
+
+                if self.filter_data[0].find("C:") >= 0:
+                    value = self.filter_data[0].strip("C:").split(';')
+                    after = int(float(value[0]))
+                    before = int(float(value[1]))
+                    self.clutch.change_chart_plot_value(before, after)
+                    self.clutchCluster.update(after)
+                    # print("Throttle: before:", before)
+                    # print("Throttle: after:", after)
+
 
             except TypeError:
                 pass
@@ -114,35 +129,45 @@ class MainWindow(Tk):
 
         # tab1
         tab1 = Frame(tablayout, bg='white')
-        tab1.pack(fill="both", expand=1)
-
-        self.clutch = Clutch(tab1, self)
-        self.clutch.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        tab1.pack(fill="both")
+        self.clutchCluster = ClutchCluster(tab1, self)
+        self.clutchCluster.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
         tab1.grid_columnconfigure(0, weight=1)
 
-        self.brake = Brake(tab1, self)
-        self.brake.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        self.brakeCluster = BrakeCluster(tab1, self)
+        self.brakeCluster.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
         tab1.grid_columnconfigure(1, weight=1)
-        tablayout.add(tab1, text="TAB 1")
 
-        self.throttle = Throttle(tab1, self)
-        self.throttle.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+        self.throttleCluster = ThrottleCluster(tab1, self)
+        self.throttleCluster.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
         tab1.grid_columnconfigure(2, weight=1)
+        tablayout.add(tab1, text="Clusters")
 
-        # # tab2
-        # tab2 = Frame(tablayout)
-        # tab2.pack(fill="both")
-        # tab2labela = Label(tab2, text="tab2a")
-        # tab2labela.grid(row=0, column=0)
-        # tablayout.add(tab2, text="TAB 2")
+        # tab2
+        tab2 = Frame(tablayout, bg='white')
+        tab2.pack(fill="both", expand=1)
 
+        self.clutch = Clutch(tab2, self)
+        self.clutch.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        tab2.grid_columnconfigure(0, weight=1)
+
+        self.brake = Brake(tab2, self)
+        self.brake.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        tab2.grid_columnconfigure(1, weight=1)
+
+
+        self.throttle = Throttle(tab2, self)
+        self.throttle.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+        tab2.grid_columnconfigure(2, weight=1)
+
+        tablayout.add(tab2, text="Settings")
         tablayout.pack(fill="both", expand=1)
 
         serialConnect = SerialConnect(container, self, self.get_serial_ports)
         serialConnect.pack()
 
         # self.connectButton = Button(self, text="run something", command=lambda: self.serial_connect("com24", 9600))
-        connectButton = Button(self, text="run something", command=self.serial_connect)
+        connectButton = Button(self, text="connect to serial port", command=self.serial_connect)
         connectButton.pack()
 
 

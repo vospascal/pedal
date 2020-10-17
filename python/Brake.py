@@ -5,9 +5,6 @@ from python.PedalFigure import PedalFigure
 class Brake(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg='white')
-        # self.pack(fill=BOTH, side=TOP)
-        label = Label(self, text="input", bg='white')
-        label.grid(row=1, column=0)
         label = Label(self, text="output", bg='white')
         label.grid(row=1, column=2)
 
