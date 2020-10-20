@@ -1,14 +1,14 @@
 // 11-10-2020
 #include <Joystick.h>  // Using the lib included with SimHub originally from Matthew Heironimus
-#include "MultiMap.h"
-
+#include <MultiMap.h>
+#include <EEPROMex.h>
 
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_GAMEPAD,
                    0, 0,                  // Button Count, Hat Switch Count
                    false, false, false,     // X and Y, but no Z Axis
                    false, false, false,   // No Rx, Ry, or Rz
                    true, true,          // No rudder or throttle
-                   false, true, false);  // No accelerator, brake, or steering
+                   true, true, false);  // No accelerator, brake, or steering
 
 
 //const bool initAutoSendState = true;
@@ -23,7 +23,7 @@ void setup() {
   Joystick.begin();
   Joystick.setThrottle(throttleValue);
   Joystick.setBrake(brakeValue);
-//  Joystick.setAccelerator(clutchValue);
+  //  Joystick.setAccelerator(clutchValue);
   delay(2000);
 }
 
@@ -52,28 +52,41 @@ float ThrottleAfter;
 void loop() {
 
   if (Serial.available() > 0) {
-    char c = Serial.read();
-    if (c == 'd')
-    {
-      String TMAP = "TMAP:" + String(outputMapThrottle[0]) + "-" + String(outputMapThrottle[1]) + "-" + String(outputMapThrottle[2]) + "-" + String(outputMapThrottle[3]) + "-" + String(outputMapThrottle[4]) + "-" + String(outputMapThrottle[5]);
+    String msg = Serial.readString();
+
+    
+//    delay(50);
+
+    if (msg.indexOf("Getmap") >= 0) {
+      String TMAP = "TMAP:" + generateStringMap(outputMapThrottle);
       Serial.print(TMAP);
       Serial.println(',');
 
-      String BMAP = "BMAP:" + String(outputMapBrake[0]) + "-" + String(outputMapBrake[1]) + "-" + String(outputMapBrake[2]) + "-" + String(outputMapBrake[3]) + "-" + String(outputMapBrake[4]) + "-" + String(outputMapBrake[5]);
+      String BMAP = "BMAP:" + generateStringMap(outputMapBrake);
       Serial.print(BMAP);
       Serial.println(',');
 
-      String CMAP = "CMAP:" + String(outputMapClutch[0]) + "-" + String(outputMapClutch[1]) + "-" + String(outputMapClutch[2]) + "-" + String(outputMapClutch[3]) + "-" + String(outputMapClutch[4]) + "-" + String(outputMapClutch[5]);
+      String CMAP = "CMAP:" + generateStringMap(outputMapClutch);
       Serial.print(CMAP);
       Serial.println(',');
     }
 
-    delay(50);
-    
-    if (c == 'e'){
-      Serial.print("setMap called");
+//    delay(50);
+
+    if (msg.indexOf("Setmap") >= 0) {
+//      Serial.print("setMap called");
+//      Serial.println(',');
+    }
+
+//    delay(50);
+
+    if (msg.indexOf("TMAP:") >= 0) {
+      String striped = msg;
+      striped.replace("TMAP:", "");
+      Serial.print(striped);
       Serial.println(',');
     }
+
 
   }
 
@@ -81,8 +94,8 @@ void loop() {
   // read the input on analog pin 0:
   int throttleRawValue = analogRead(A0);
   int brakeRawValue = analogRead(A1);
-//  int clutchRawValue = analogRead(A2);
-  
+  //  int clutchRawValue = analogRead(A2);
+
   // print out the value you read:
   //
   if (throttleRawValue <= 74) {
@@ -109,30 +122,75 @@ void loop() {
     Joystick.setBrake(BrakeAfter);
   }
 
-//  if (clutchRawValue <= 74) {
-//    ClutchBefore = 0;
-//    ClutchAfter = 0;
-//    Joystick.setAccelerator(0);
-//  } else {
-//    int restClutchValue = clutchRawValue - 74;
-//
-//    ClutchBefore = restClutchValue / 4;
-//    ClutchAfter = multiMap<int>(ClutchBefore, inputMapClutch, outputMapClutch, 50);
-//    Joystick.setAccelerator(ClutchAfter);
-//  }
+  //  if (clutchRawValue <= 74) {
+  //    ClutchBefore = 0;
+  //    ClutchAfter = 0;
+  //    Joystick.setAccelerator(0);
+  //  } else {
+  //    int restClutchValue = clutchRawValue - 74;
+  //
+  //    ClutchBefore = restClutchValue / 4;
+  //    ClutchAfter = multiMap<int>(ClutchBefore, inputMapClutch, outputMapClutch, 50);
+  //    Joystick.setAccelerator(ClutchAfter);
+  //  }
 
-  
+
   String p1 = ";";
   Serial.print("T:");
   Serial.println(ThrottleBefore + p1 + ThrottleAfter);
 
   Serial.print("B:");
   Serial.println(BrakeBefore + p1 + BrakeAfter);
-//
-//  Serial.print("C:");
-//  Serial.println(ClutchBefore + p1 + ClutchAfter);
-  
+  //
+  //  Serial.print("C:");
+  //  Serial.println(ClutchBefore + p1 + ClutchAfter);
+
   Joystick.sendState(); // Update the Joystick status on the PC
   Serial.flush();
   delay(100);
+}
+
+
+
+//---------------------------------------------------------
+
+bool write_StringEEPROM(int Addr, String input) {
+  char charbuf[15];
+  input.toCharArray(charbuf, 15);
+
+  return EEPROM.writeBlock<char>(Addr, charbuf, 15);
+}
+
+bool update_StringEEPROM(int Addr, String input) {
+  char charbuf[15];
+  input.toCharArray(charbuf, 15);
+
+  return EEPROM.updateBlock<char>(Addr, charbuf, 15);
+}
+
+
+String read_StringEEPROM(int Addr) {
+  String outputEEPROM;
+  char output[] = " ";
+
+  EEPROM.readBlock<char>(Addr, output, 15);
+  //convert to string
+  outputEEPROM = String(output);
+
+  return outputEEPROM;
+}
+
+String generateStringMap(int *lists) {
+  String output;
+  for (int i = 0; i < 6; i++) {
+    if (i < 5) {
+      output += String(lists[i]) + "-";
+    }
+    if (i == 5) {
+      output += String(lists[i]);
+    }
+    //    output += String(lists[i]) += String(",");
+  }
+  return String(output);
+
 }

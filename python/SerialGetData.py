@@ -4,6 +4,8 @@ def serial_get_data(self):
             self.serial_data = self.serial_object.readline().decode('utf-8').strip('\n').strip('\r')
             self.filter_data = self.serial_data.split(',')
 
+            print(self.filter_data[0])
+
             if self.filter_data[0].find("BMAP:") >= 0:
                 brake_map = self.filter_data[0].strip("BMAP:").split('-')
                 print("Brake map:", brake_map)

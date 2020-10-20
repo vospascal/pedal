@@ -28,5 +28,6 @@ def serial_connect(self, port="COM24", baud=9600):
     t1.daemon = True
     t1.start()
 
-    serial_send_data(self, b'd')
-    serial_send_data(self, b'e')
+    serial_send_data(self, ("Getmap:\n".encode()))
+    serial_send_data(self, ("Setmap:\n".encode()))
+    serial_send_data(self, ("TMAP:0-15-43-53-75-100\n".encode()))
