@@ -52,7 +52,7 @@ float ThrottleAfter;
 void loop() {
 
   if (Serial.available() > 0) {
-    String msg = Serial.readString();
+    String msg = Serial.readStringUntil('\n');
 
     
 //    delay(50);
