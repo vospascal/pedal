@@ -1,18 +1,32 @@
-from tkinter import Frame
-from python.SerialOptionMenu import SerialOptionMenu
+import serial
+import serial.tools.list_ports
+import sys
+import threading
 
-class SerialConnect(Frame):
-    def __init__(self, parent, controller, get_serial_ports):
-        Frame.__init__(self, parent, bg='white')
-        com_port = SerialOptionMenu(self, "com port selection", get_serial_ports(), 0, 1)
-        com_port.grid(row=1, column=0)
+from python.SerialGetData import serial_get_data
+from python.SerialSendData import serial_send_data
 
-        bout_speed = SerialOptionMenu(self, "baud speed selection",
-                                           [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200], 0, 1)
-        bout_speed.grid(row=1, column=1)
 
-        bit_size = SerialOptionMenu(self, "bit size selection", [2, 4, 8, 16, 32, 64], 0, 1)
-        bit_size.grid(row=1, column=2)
+def serial_connect(self, port="COM24", baud=9600):
+    try:
+        if sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
 
-        time_out = SerialOptionMenu(self, "time out selection", [0, 2, 4, 6, 8, 10, 15, 20], 0, 1)
-        time_out.grid(row=1, column=3)
+            try:
+                self.serial_object = serial.Serial('/dev/tty' + str(port), baud)
+
+            except:
+                print("Cant Open Specified Port")
+
+        elif sys.platform.startswith('win'):
+            self.serial_object = serial.Serial(port, baud)
+
+    except ValueError:
+        print("Enter Baud and Port")
+        return
+
+    t1 = threading.Thread(target=lambda: serial_get_data(self))
+    t1.daemon = True
+    t1.start()
+
+    serial_send_data(self, b'd')
+    serial_send_data(self, b'e')

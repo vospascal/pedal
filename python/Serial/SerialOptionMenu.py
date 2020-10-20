@@ -1,4 +1,3 @@
-import tkinter as tk
 from tkinter import Frame, Label, OptionMenu, StringVar
 
 class SerialOptionMenu(Frame):

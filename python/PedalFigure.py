@@ -11,10 +11,10 @@ class PedalFigure(Frame):
         self.title = title
         self.xscale = xscale
         self.yscale = yscale
+        self.procent = [0, 20, 40, 60, 80, 100]
         self.main()
 
     def main(self):
-        self.procent = [0, 20, 40, 60, 80, 100]
         self.Inputs = ProcentageBlock(self.root, self.set_chart_point, self.procent)
         self.Inputs.grid(row=0, column=0)
         self.figure = FigureBlock(self.root, self.title, self.xscale, self.yscale, self.procent)

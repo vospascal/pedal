@@ -14,6 +14,7 @@ Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_GAMEPAD,
 //const bool initAutoSendState = true;
 int throttleValue = 0;
 int brakeValue = 0;
+int clutchValue = 0;
 
 // the setup routine runs once when you press reset:
 void setup() {
@@ -22,9 +23,13 @@ void setup() {
   Joystick.begin();
   Joystick.setThrottle(throttleValue);
   Joystick.setBrake(brakeValue);
+//  Joystick.setAccelerator(clutchValue);
   delay(2000);
 }
 
+
+int inputMapClutch[] =  { 0, 20, 40, 60, 80, 100 };
+int outputMapClutch[] = { 0, 15, 43, 53, 75, 100 };
 
 int inputMapThrottle[] =  { 0, 20, 40, 60, 80, 100 };
 int outputMapThrottle[] = { 0, 15, 43, 53, 75, 100 };
@@ -39,6 +44,10 @@ float BrakeAfter;
 int ThrottleBefore;
 float ThrottleAfter;
 
+
+//int ClutchBefore;
+//float ClutchAfter;
+
 // the loop routine runs over and over again forever:
 void loop() {
 
@@ -52,6 +61,10 @@ void loop() {
 
       String BMAP = "BMAP:" + String(outputMapBrake[0]) + "-" + String(outputMapBrake[1]) + "-" + String(outputMapBrake[2]) + "-" + String(outputMapBrake[3]) + "-" + String(outputMapBrake[4]) + "-" + String(outputMapBrake[5]);
       Serial.print(BMAP);
+      Serial.println(',');
+
+      String CMAP = "CMAP:" + String(outputMapClutch[0]) + "-" + String(outputMapClutch[1]) + "-" + String(outputMapClutch[2]) + "-" + String(outputMapClutch[3]) + "-" + String(outputMapClutch[4]) + "-" + String(outputMapClutch[5]);
+      Serial.print(CMAP);
       Serial.println(',');
     }
 
@@ -68,7 +81,8 @@ void loop() {
   // read the input on analog pin 0:
   int throttleRawValue = analogRead(A0);
   int brakeRawValue = analogRead(A1);
-
+//  int clutchRawValue = analogRead(A2);
+  
   // print out the value you read:
   //
   if (throttleRawValue <= 74) {
@@ -77,7 +91,7 @@ void loop() {
     Joystick.setThrottle(0);
   } else {
     int restThrottleValue = throttleRawValue - 74;
-    //    Joystick.setThrottle(restThrottleValue);
+
     ThrottleBefore = restThrottleValue / 4;
     ThrottleAfter = multiMap<int>(ThrottleBefore, inputMapThrottle, outputMapThrottle, 50);
     Joystick.setThrottle(ThrottleAfter);
@@ -89,19 +103,35 @@ void loop() {
     Joystick.setBrake(0);
   } else {
     int restBrakeValue = brakeRawValue - 74;
-    //    Joystick.setBrake(restBrakeValue);
+
     BrakeBefore = restBrakeValue / 4;
     BrakeAfter = multiMap<int>(BrakeBefore, inputMapBrake, outputMapBrake, 50);
     Joystick.setBrake(BrakeAfter);
   }
+
+//  if (clutchRawValue <= 74) {
+//    ClutchBefore = 0;
+//    ClutchAfter = 0;
+//    Joystick.setAccelerator(0);
+//  } else {
+//    int restClutchValue = clutchRawValue - 74;
+//
+//    ClutchBefore = restClutchValue / 4;
+//    ClutchAfter = multiMap<int>(ClutchBefore, inputMapClutch, outputMapClutch, 50);
+//    Joystick.setAccelerator(ClutchAfter);
+//  }
+
+  
   String p1 = ";";
   Serial.print("T:");
   Serial.println(ThrottleBefore + p1 + ThrottleAfter);
 
-
   Serial.print("B:");
   Serial.println(BrakeBefore + p1 + BrakeAfter);
-
+//
+//  Serial.print("C:");
+//  Serial.println(ClutchBefore + p1 + ClutchAfter);
+  
   Joystick.sendState(); // Update the Joystick status on the PC
   Serial.flush();
   delay(100);
