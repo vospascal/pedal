@@ -2,6 +2,7 @@ import serial
 import serial.tools.list_ports
 import sys
 import threading
+import time
 
 from python.SerialGetData import serial_get_data
 from python.SerialSendData import serial_send_data
@@ -29,5 +30,7 @@ def serial_connect(self, port="COM24", baud=9600):
     t1.start()
 
     serial_send_data(self, ("Getmap:\n".encode()))
+    serial_send_data(self, ("TMAP:0-10-30-40-75-100\n".encode()))
+    serial_send_data(self, ("BMAP:0-5-15-30-60-100\n".encode()))
     serial_send_data(self, ("Setmap:\n".encode()))
-    serial_send_data(self, ("TMAP:0-15-43-53-75-100\n".encode()))
+    serial_send_data(self, ("Getmap:\n".encode()))

@@ -36,7 +36,7 @@ def Saveconfig():
     f = open(filename, 'w')
     json.dump(localserialconfig, f, indent=2)
     f.close()
-    print('Stored : ', localserialconfig)
+    # print('Stored : ', localserialconfig)
 
 
 # read serial config

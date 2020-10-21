@@ -28,6 +28,6 @@ class PedalFigure(Frame):
 
     def getMap(self, pedel_map):
         self.procent = list(map(int, pedel_map))
-        print(self.procent, "pedel_map")
+        # print(self.procent, "pedel_map")
         self.Inputs = ProcentageBlock(self.root, self.set_chart_point, self.procent)
         self.figure.abc(self.procent)

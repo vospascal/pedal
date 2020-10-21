@@ -83,7 +83,6 @@ class MainWindow(Tk):
         connectButton = Button(self, text="connect to serial port", command=lambda: serial_connect(self, self.get_connection_info()[1], self.get_connection_info()[0]))
         connectButton.pack()
 
-        print(self.get_connection_info()[1])
         # connectButton.configure(state=DISABLED)
 
         # serialConnect = SerialConnect.py(container, self.get_serial_ports)

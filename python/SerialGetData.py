@@ -4,17 +4,15 @@ def serial_get_data(self):
             self.serial_data = self.serial_object.readline().decode('utf-8').strip('\n').strip('\r')
             self.filter_data = self.serial_data.split(',')
 
-            print(self.filter_data[0])
-
             if self.filter_data[0].find("BMAP:") >= 0:
                 brake_map = self.filter_data[0].strip("BMAP:").split('-')
                 print("Brake map:", brake_map)
-                self.throttle.getMap(brake_map)
+                self.brake.getMap(brake_map)
 
             if self.filter_data[0].find("TMAP:") >= 0:
                 throttle_map = self.filter_data[0].strip("TMAP:").split('-')
                 print("Throttle map:", throttle_map)
-                self.brake.getMap(throttle_map)
+                self.throttle.getMap(throttle_map)
 
             if self.filter_data[0].find("CMAP:") >= 0:
                 clutch_map = self.filter_data[0].strip("CMAP:").split('-')
@@ -45,8 +43,8 @@ def serial_get_data(self):
                 before = int(float(value[1]))
                 self.clutch.change_chart_plot_value(before, after)
                 # self.clutchCluster.update(after)
-                # print("Throttle: before:", before)
-                # print("Throttle: after:", after)
+                # print("Clutch: before:", before)
+                # print("Clutch: after:", after)
 
             if self.filter_data[0].find("setMap") >= 0:
                 print(self.filter_data[0])
