@@ -188,7 +188,7 @@ String generateStringMap(int *lists) {
 
 
 void updateThrottleMap (String msg) {
-  if (msg.indexOf("TMAP:") > 0) {
+  if (msg.indexOf("TMAP:") >= 0) {
     String striped_Tmap = msg;
     striped_Tmap.replace("TMAP:", "");
     String tpart0 = getValue(striped_Tmap, '-', 0);
@@ -209,7 +209,7 @@ void updateThrottleMap (String msg) {
 
 
 void updateBrakeMap(String msg){
-    if (msg.indexOf("BMAP:") > 0) {
+    if (msg.indexOf("BMAP:") >= 0) {
       String striped_Bmap = msg;
       striped_Bmap.replace("BMAP:", "");
       String bpart0 = getValue(striped_Bmap, '-', 0);

@@ -36,24 +36,24 @@ class SerialPort(Frame):
         self.save = Button(self, text="save", command=config.Close)
         self.save.grid(row=3, column=0)
 
-        print('baudrate: ', self.tc_baudrate['values'])
-        print('ports: ', get_serial_ports())
+        # print('baudrate: ', self.tc_baudrate['values'])
+        # print('ports: ', get_serial_ports())
 
 
     def set_baudrate(self, event):
         config.localserialconfig["baudrate"] = self.tc_baudrate.get()
-        print('Set baudrate ', config.localserialconfig["baudrate"])
-        print(config.localserialconfig)
+        # print('Set baudrate ', config.localserialconfig["baudrate"])
+        # print(config.localserialconfig)
 
     def set_comport(self, event):
         config.localserialconfig["comport"] = self.tc_comports.get()
-        print('Set comport', config.localserialconfig["comport"])
-        print(config.localserialconfig)
+        # print('Set comport', config.localserialconfig["comport"])
+        # print(config.localserialconfig)
 
     def find_index(self, value, qlist):
         try:
             idx = qlist.index(value)
         except ValueError:
             idx = -1
-        print('find_index: ', idx, ' Value: ', value, ' list: ', qlist)
+        # print('find_index: ', idx, ' Value: ', value, ' list: ', qlist)
         return idx
