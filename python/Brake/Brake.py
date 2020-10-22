@@ -16,6 +16,6 @@ class Brake(Frame):
     def change_chart_plot_value(self, before, after):
         self.brake.change_chart_plot_value(before, after)
 
-    def getMap(self, message):
-        self.brake.getMap(message)
+    def getMap(self, pedel_map):
+        self.brake.getMap(pedel_map)
 

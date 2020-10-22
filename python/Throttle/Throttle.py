@@ -16,6 +16,6 @@ class Throttle(Frame):
     def change_chart_plot_value(self, before, after):
         self.throttle.change_chart_plot_value(before, after)
 
-    def getMap(self, message):
-        self.throttle.getMap(message)
+    def getMap(self, pedel_map):
+        self.throttle.getMap(pedel_map)
 

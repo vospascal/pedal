@@ -11,19 +11,19 @@ def serial_get_data(self):
             # print(self.activeTab)
             if self.filter_data[0].find("BMAP:") >= 0:
                 brake_map = self.filter_data[0].strip("BMAP:").split('-')
-                pub.sendMessage('brake_map', message=brake_map)
+                pub.sendMessage('brake_map', pedel_map=brake_map)
                 # print("Brake map:", brake_map)
                 # self.brake.getMap(brake_map)
 
             if self.filter_data[0].find("TMAP:") >= 0:
                 throttle_map = self.filter_data[0].strip("TMAP:").split('-')
-                pub.sendMessage('throttle_map', message=throttle_map)
+                pub.sendMessage('throttle_map', pedel_map=throttle_map)
                 # print("Throttle map:", throttle_map)
                 # self.throttle.getMap(throttle_map)
 
             if self.filter_data[0].find("CMAP:") >= 0:
                 clutch_map = self.filter_data[0].strip("CMAP:").split('-')
-                pub.sendMessage('clutch_map', message=clutch_map)
+                pub.sendMessage('clutch_map', pedel_map=clutch_map)
                 # print("Clutch map:", clutch_map)
                 # self.clutch.getMap(clutch_map)
 
