@@ -1,5 +1,6 @@
 from tkinter import Frame, Label
 from python.PedalFigure import PedalFigure
+from pubsub import pub
 
 
 class Throttle(Frame):
@@ -9,8 +10,12 @@ class Throttle(Frame):
         self.throttle = PedalFigure(self, "throttle", [0, 20, 40, 60, 80, 100], [0, 20, 40, 60, 80, 100])
         self.throttle.grid(row=1, column=0)
 
-    def change_chart_plot_value(self, after, before):
-        self.throttle.change_chart_plot_value(after, before)
+        pub.subscribe(self.getMap, 'throttle_map')
+        pub.subscribe(self.change_chart_plot_value, 'throttle_value')
 
-    def getMap(self, throttle_map):
-        self.throttle.getMap(throttle_map)
+    def change_chart_plot_value(self, before, after):
+        self.throttle.change_chart_plot_value(before, after)
+
+    def getMap(self, message):
+        self.throttle.getMap(message)
+

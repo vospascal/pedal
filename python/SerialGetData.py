@@ -1,4 +1,5 @@
 import threading
+from pubsub import pub
 
 
 def serial_get_data(self):
@@ -10,18 +11,21 @@ def serial_get_data(self):
             # print(self.activeTab)
             if self.filter_data[0].find("BMAP:") >= 0:
                 brake_map = self.filter_data[0].strip("BMAP:").split('-')
-                print("Brake map:", brake_map)
-                self.brake.getMap(brake_map)
+                pub.sendMessage('brake_map', message=brake_map)
+                # print("Brake map:", brake_map)
+                # self.brake.getMap(brake_map)
 
             if self.filter_data[0].find("TMAP:") >= 0:
                 throttle_map = self.filter_data[0].strip("TMAP:").split('-')
-                print("Throttle map:", throttle_map)
-                self.throttle.getMap(throttle_map)
+                pub.sendMessage('throttle_map', message=throttle_map)
+                # print("Throttle map:", throttle_map)
+                # self.throttle.getMap(throttle_map)
 
             if self.filter_data[0].find("CMAP:") >= 0:
                 clutch_map = self.filter_data[0].strip("CMAP:").split('-')
-                print("Clutch map:", clutch_map)
-                self.clutch.getMap(clutch_map)
+                pub.sendMessage('clutch_map', message=clutch_map)
+                # print("Clutch map:", clutch_map)
+                # self.clutch.getMap(clutch_map)
 
             if self.filter_data[0].find("B:") >= 0:
                 value = self.filter_data[0].strip("B:").split(';')
@@ -29,10 +33,12 @@ def serial_get_data(self):
                 before = int(float(value[1]))
 
                 if self.activeTab == 1:
-                    threading.Thread(target=self.brake.change_chart_plot_value(before, after)).start()
+                    pub.sendMessage('brake_value', after=after, before=before)
+                    # threading.Thread(target=self.brake.change_chart_plot_value(before, after)).start()
 
                 if self.activeTab == 0:
-                    threading.Thread(target=self.brakeCluster.update(after)).start()
+                    pub.sendMessage('brake_cluster', after=after)
+                    # threading.Thread(target=self.brakeCluster.update(after)).start()
                 # self.brake.change_chart_plot_value(before, after)
                 # self.brakeCluster.update(after)
                 # print("Brake: before:", before)
@@ -44,10 +50,12 @@ def serial_get_data(self):
                 before = int(float(value[1]))
 
                 if self.activeTab == 1:
-                    self.throttle.change_chart_plot_value(before, after)
+                    pub.sendMessage('throttle_value', after=after, before=before)
+                    # self.throttle.change_chart_plot_value(before, after)
 
                 if self.activeTab == 0:
-                    self.throttleCluster.update(after)
+                    pub.sendMessage('throttle_cluster', after=after)
+                    # self.throttleCluster.update(after)
                 # print("Throttle: before:", before)
                 # print("Throttle: after:", after)
 
@@ -57,10 +65,12 @@ def serial_get_data(self):
                 before = int(float(value[1]))
 
                 if self.activeTab == 1:
-                    self.clutch.change_chart_plot_value(before, after)
+                    pub.sendMessage('clutch_value', after=after, before=before)
+                    # self.clutch.change_chart_plot_value(before, after)
 
                 if self.activeTab == 0:
-                    self.clutchCluster.update(after)
+                    pub.sendMessage('clutch_cluster', after=after)
+                    # self.clutchCluster.update(after)
                 # print("Clutch: before:", before)
                 # print("Clutch: after:", after)
 

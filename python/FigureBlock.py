@@ -42,5 +42,5 @@ class FigureBlock(Frame):
         self.scatter_x = [int(after)]
         self.scatter_y = [int(before)]
 
-    def abc(self, xyz):
+    def set_y_data(self, xyz):
         self.lines.set_ydata(xyz)

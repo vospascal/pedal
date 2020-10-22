@@ -1,5 +1,6 @@
 from tkinter import Frame, Canvas
 from python.Cluster import Cluster
+from pubsub import pub
 
 
 class ClutchCluster(Frame):
@@ -11,5 +12,7 @@ class ClutchCluster(Frame):
         self.cluster = Cluster(canvas)
         self.cluster.grid(row=1, column=0, columnspan=2)
 
-    def update(self, delta):
-        self.cluster.update(delta)
+        pub.subscribe(self.update, 'clutch_cluster')
+
+    def update(self, after):
+        self.cluster.update(after)

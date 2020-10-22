@@ -30,4 +30,4 @@ class PedalFigure(Frame):
         self.procent = list(map(int, pedel_map))
         # print(self.procent, "pedel_map")
         self.Inputs = ProcentageBlock(self.root, self.set_chart_point, self.procent)
-        self.figure.abc(self.procent)
+        self.figure.set_y_data(self.procent)
