@@ -27,7 +27,7 @@ class FigureBlock(Frame):
         canvas = FigureCanvasTkAgg(fig, master=self)
         canvas.get_tk_widget().pack()
 
-        self.ani_brake = animation.FuncAnimation(fig, self.update_chart, interval=100, frames=30, blit=False)
+        self.ani_brake = animation.FuncAnimation(fig, self.update_chart, frames=30, blit=False)
 
     def update_chart(self, _):
         # test = mm.multiMap(self.scatter_x[0], [0, 20, 40, 60, 80, 100], self.procent, 100)

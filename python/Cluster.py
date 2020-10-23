@@ -5,9 +5,10 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 # from python import multiMap as mm
 import numpy as np
 
+
 class Cluster(Frame):
-    def __init__(self, root):
-        super().__init__(root)
+    def __init__(self, parent):
+        Frame.__init__(self, parent, bg='white')
 
         fig = plt.Figure(figsize=(3, 3), dpi=80, facecolor='w', edgecolor='k')
         # fig.text(0.5, 0.95, title, ha='center')
@@ -22,7 +23,7 @@ class Cluster(Frame):
         canvas = FigureCanvasTkAgg(fig, master=self)
         canvas.get_tk_widget().pack()
 
-        self.ani_brake = animation.FuncAnimation(fig, self.update_chart, interval=100, frames=30, blit=False)
+        self.ani_brake = animation.FuncAnimation(fig, self.update_chart, frames=30, blit=False)
 
     def update(self, delta):
         self.procent = [int(delta), 100 - int(delta)]
