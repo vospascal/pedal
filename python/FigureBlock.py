@@ -14,9 +14,9 @@ class FigureBlock(Frame):
         self.scatter_y = [0]
         self.procent = procent
 
-        fig = plt.Figure(figsize=(3, 3), dpi=80, facecolor='w', edgecolor='k')
-        fig.text(0.5, 0.95, title, ha='center')
-        ax = fig.add_subplot(1, 1, 1)
+        self.fig = plt.Figure(figsize=(3, 3), dpi=80, facecolor='w', edgecolor='k')
+        self.fig.text(0.5, 0.95, title, ha='center')
+        ax = self.fig.add_subplot(1, 1, 1)
         self.sc = ax.scatter(self.scatter_x, self.scatter_y)
         ax.set_xlim(0, 100)
         ax.set_ylim(0, 100)
@@ -24,15 +24,16 @@ class FigureBlock(Frame):
         self.line, = ax.plot(xscale, yscale)
         self.lines, = ax.plot(xscale, self.procent, markersize=5, marker='o')
 
-        canvas = FigureCanvasTkAgg(fig, master=self)
+        canvas = FigureCanvasTkAgg(self.fig, master=self)
         canvas.get_tk_widget().pack()
 
-        self.ani_brake = animation.FuncAnimation(fig, self.update_chart, frames=30, blit=False)
+        self.ani_brake = animation.FuncAnimation(self.fig, self.update_chart, frames=60, blit=False)
 
     def update_chart(self, _):
         # test = mm.multiMap(self.scatter_x[0], [0, 20, 40, 60, 80, 100], self.procent, 100)
         self.sc.set_offsets(np.column_stack((self.scatter_x, self.scatter_y)))
-        return self.sc
+        self.fig.canvas.draw_idle()
+        # return self.sc
 
     def set_chart_point(self, point, position):
         self.procent[position] = int(point.get())
