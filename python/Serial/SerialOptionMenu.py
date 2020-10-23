@@ -1,8 +1,8 @@
 from tkinter import Frame, Label, OptionMenu, StringVar
 
 class SerialOptionMenu(Frame):
-    def __init__(self, root, text, list, row, column):
-        super().__init__(root)
+    def __init__(self, parent, text, list, row, column):
+        Frame.__init__(self, parent, bg='white')
 
         label = Label(self, text=text)
         label.grid(row=row, column=column)

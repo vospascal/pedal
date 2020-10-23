@@ -6,6 +6,7 @@ from pubsub import pub
 class BrakeCluster(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg='white')
+
         canvas = Canvas(self, width=200, height=200, bg='white')
         canvas.grid(row=0, column=0, columnspan=2)
         # Brake

@@ -7,8 +7,8 @@ import numpy as np
 
 
 class FigureBlock(Frame):
-    def __init__(self, root, title, xscale, yscale, procent):
-        super().__init__(root)
+    def __init__(self, parent, title, xscale, yscale, procent):
+        Frame.__init__(self, parent, bg='white')
 
         self.scatter_x = [0]
         self.scatter_y = [0]
