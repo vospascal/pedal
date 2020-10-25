@@ -1,0 +1,58 @@
+pyinstaller.exe  -n PedalBox -w layout.py -F
+
+
+
+pyinstaller.exe -i .\Assets\pedal.ico -n PedalBox -w layout.py -F
+
+
+
+
+pyinstaller.exe -i pedal.ico -n PedalBox -w -F --hidden-import ctypes main.py
+pyinstaller.exe -i pedal.ico -n PedalBox -w -F main.py
+
+
+pyinstaller.exe -i .\Assets\pedal.ico --upx-dir=..\upx-3.96-win64 -n PedalBox -w -F layout.py -y --onefile
+
+
+pyinstaller.exe -i .\Assets\pedal.ico --upx-dir=..\upx-3.96-win64 --upx-exclude=vcruntime140.dll;ucrtbase.dll -n PedalBox -w -F layout.py -y --onefile
+
+
+
+pyinstaller.exe -i .\Assets\pedal.ico -n PedalBox -w -F layout.py -y --onefile --hidden-import=matplotlib
+
+
+
+
+pyinstaller.exe --onefile --console --upx-exclude vcruntime140.dll --upx-exclude ucrtbase.dll my-prog.py
+
+How to Exclude Files and Folders From Norton Antivirus Software Scans
+Open the Norton antivirus software and select Settings.
+Select Antivirus.
+Select the Scans and Risks tab.
+Scroll down to the Exclusions/Low Risks section and select Configure [+] next to Items to Exclude From Scans.
+
+
+
+docker run -v "C:/Users/Pascal/Desktop/pedalen/ui:/src" cdrx/pyinstaller-windows "pyinstaller -i Z:/src/python/Assets/pedal.ico --upx-dir=Z:/src/upx-3.96-win64 -n PedalBox -w -F Z:/src/python/layout.py -y --onefile"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pyinstaller.exe --upx-dir=..\upx-3.96-win64 -n PedalBox -w
